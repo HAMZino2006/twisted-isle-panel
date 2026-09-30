@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+export type PanelRole = 'admin' | 'upper staff' | 'owner';
+
 export const authRouter = Router();
 
 const scopes = encodeURIComponent('identify guilds.members.read');
@@ -50,12 +52,15 @@ authRouter.get('/discord/callback', async (req, res) => {
   });
   if (!memberResponse.ok) return res.status(403).send('Non appartieni al server Discord Twisted Isle.');
   const member = await memberResponse.json() as { roles?: string[] };
-  const roleMap: Array<[string, string]> = [
+  
+  const roleMap: Array<[string, PanelRole]> = [
     ['DISCORD_OWNER_ROLE_ID', 'owner'],
     ['DISCORD_UPPER_STAFF_ROLE_ID', 'upper staff'],
     ['DISCORD_ADMIN_ROLE_ID', 'admin']
   ];
-  const role = roleMap.find(([env]) => member.roles?.includes(process.env[env] ?? ''))?.[1];
+  const foundRole = roleMap.find(([env]) => member.roles?.includes(process.env[env] ?? ''));
+  const role: PanelRole | undefined = foundRole?.[1];
+  
   if (!role) return res.status(403).send('Non hai un ruolo autorizzato.');
 
   req.session.user = { id: user.id, username: user.username, avatar: user.avatar, role };
