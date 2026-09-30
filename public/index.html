@@ -1,31 +1,199 @@
 <!doctype html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Twisted Isle Panel</title>
-  <style>
-    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; background: #111827; color: #f9fafb; }
-    body { max-width: 980px; margin: 0 auto; padding: 32px 20px; }
-    .card { background: #1f2937; border: 1px solid #374151; border-radius: 14px; padding: 24px; margin: 16px 0; }
-    .muted { color: #9ca3af; } button { background: #5865f2; color: white; border: 0; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
-    input { background: #111827; color: white; border: 1px solid #4b5563; padding: 10px; border-radius: 8px; width: min(100%, 500px); }
-    .online { color: #34d399; } .offline { color: #f87171; }
-  </style>
-</head>
-<body>
-  <h1>Twisted Isle</h1><p class="muted">Pannello The Isle Evrima</p>
-  <main id="app"><div class="card">Controllo autenticazione...</div></main>
-  <script>
-    const app = document.querySelector('#app');
-    async function load() {
-      const me = await fetch('/api/me');
-      if (!me.ok) { app.innerHTML = '<div class="card"><h2>Accesso staff</h2><p>Accedi con Discord per entrare nel pannello.</p><a href="/auth/discord"><button>Accedi con Discord</button></a></div>'; return; }
-      const user = await me.json(); const server = await (await fetch('/api/server')).json();
-      app.innerHTML = `<div class="card"><strong>${user.username}</strong> · ruolo: <b>${user.role}</b><button id="logout" style="float:right">Esci</button></div><div class="card"><h2>Server</h2><p class="${server.online ? 'online' : 'offline'}">● ${server.online ? 'Online' : 'Non configurato'}</p><p>Giocatori: ${server.players}/${server.maxPlayers}</p><p class="muted">Provider: ${server.provider}</p></div><div class="card"><h2>Comando</h2><input id="command" placeholder="Comando RCON (quando configurato)"/><button id="send">Invia</button><p id="result" class="muted"></p></div>`;
-      document.querySelector('#logout').onclick = () => fetch('/auth/logout', { method: 'POST' }).then(() => location.reload());
-      document.querySelector('#send').onclick = async () => { const command = document.querySelector('#command').value; const r = await fetch('/api/server/command', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({command}) }); document.querySelector('#result').textContent = (await r.json()).message || 'Errore'; };
-    } load();
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twisted Isle Panel</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">Twisted Isle</div>
+        <div class="logo-sub">The Isle Evrima Panel</div>
+
+        <div class="nav-section">
+          <div class="nav-label">Main</div>
+          <a class="nav-link active" href="#">Dashboard</a>
+          <a class="nav-link" href="#">Server</a>
+          <a class="nav-link" href="#">Players</a>
+          <a class="nav-link" href="#">Logs</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Admin</div>
+          <a class="nav-link" href="#">Commands</a>
+          <a class="nav-link" href="#">RCON</a>
+          <a class="nav-link" href="#">Config</a>
+          <a class="nav-link" href="#">Discord</a>
+        </div>
+
+        <div class="user-section">
+          <div class="user-info">
+            <img class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" />
+            <div class="user-details">
+              <div class="user-name">HAMZino</div>
+              <div class="user-role">Owner</div>
+            </div>
+          </div>
+          <button class="logout-btn">Logout</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="header">
+          <div>
+            <div class="page-title">Settings</div>
+            <div class="page-subtitle">Server configuration interface</div>
+          </div>
+          <div class="status online">
+            <span class="status-dot online"></span>
+            Server Online
+          </div>
+        </header>
+
+        <section class="grid">
+          <div class="stat-box">
+            <div class="stat-label">Players</div>
+            <div class="stat-value">18</div>
+            <div class="stat-unit">/ 40 online</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Map</div>
+            <div class="stat-value">Twisted</div>
+            <div class="stat-unit">Island region</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Ping</div>
+            <div class="stat-value">42ms</div>
+            <div class="stat-unit">Stable connection</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Uptime</div>
+            <div class="stat-value">04:12</div>
+            <div class="stat-unit">Server online</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-title">Graphics</div>
+          <div class="grid two">
+            <div class="setting-group">
+              <div class="setting-row">
+                <label>Resolution</label>
+                <select>
+                  <option>1024x768</option>
+                  <option>1280x720</option>
+                  <option selected>1920x1080</option>
+                  <option>2560x1440</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>Texture Quality</label>
+                <select>
+                  <option>Low</option>
+                  <option selected>Epic</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>VSync</label>
+                <select>
+                  <option>Off</option>
+                  <option selected>On</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>FPS Limit</label>
+                <input type="text" value="144" />
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-row">
+                <label>Shadow Quality</label>
+                <select>
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option selected>Epic</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>Ambient Occlusion</label>
+                <select>
+                  <option>Off</option>
+                  <option selected>On</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>Bloom</label>
+                <select>
+                  <option>Off</option>
+                  <option selected>On</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label>Clouds</label>
+                <select>
+                  <option>Low</option>
+                  <option selected>Volumetric</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-title">Administrative actions</div>
+          <div class="admin-section">
+            <div class="admin-label">Admin only</div>
+            <button class="btn primary">Restart server</button>
+            <button class="btn">Save config</button>
+            <button class="btn danger">Force reboot</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-title">Latest activity</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Actor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>12:42</td>
+                <td>Restart</td>
+                <td>Owner</td>
+                <td class="text-success">Success</td>
+              </tr>
+              <tr>
+                <td>12:18</td>
+                <td>Whitelist update</td>
+                <td>Admin</td>
+                <td class="text-success">Success</td>
+              </tr>
+              <tr>
+                <td>11:52</td>
+                <td>Player kick</td>
+                <td>Upper Staff</td>
+                <td class="text-warning">Executed</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </body>
 </html>
