@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twisted Isle Panel</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; background: #111827; color: #f9fafb; }
+    body { max-width: 980px; margin: 0 auto; padding: 32px 20px; }
+    .card { background: #1f2937; border: 1px solid #374151; border-radius: 14px; padding: 24px; margin: 16px 0; }
+    .muted { color: #9ca3af; } button { background: #5865f2; color: white; border: 0; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+    input { background: #111827; color: white; border: 1px solid #4b5563; padding: 10px; border-radius: 8px; width: min(100%, 500px); }
+    .online { color: #34d399; } .offline { color: #f87171; }
+  </style>
+</head>
+<body>
+  <h1>Twisted Isle</h1><p class="muted">Pannello The Isle Evrima</p>
+  <main id="app"><div class="card">Controllo autenticazione...</div></main>
+  <script>
+    const app = document.querySelector('#app');
+    async function load() {
+      const me = await fetch('/api/me');
+      if (!me.ok) { app.innerHTML = '<div class="card"><h2>Accesso staff</h2><p>Accedi con Discord per entrare nel pannello.</p><a href="/auth/discord"><button>Accedi con Discord</button></a></div>'; return; }
+      const user = await me.json(); const server = await (await fetch('/api/server')).json();
+      app.innerHTML = `<div class="card"><strong>${user.username}</strong> · ruolo: <b>${user.role}</b><button id="logout" style="float:right">Esci</button></div><div class="card"><h2>Server</h2><p class="${server.online ? 'online' : 'offline'}">● ${server.online ? 'Online' : 'Non configurato'}</p><p>Giocatori: ${server.players}/${server.maxPlayers}</p><p class="muted">Provider: ${server.provider}</p></div><div class="card"><h2>Comando</h2><input id="command" placeholder="Comando RCON (quando configurato)"/><button id="send">Invia</button><p id="result" class="muted"></p></div>`;
+      document.querySelector('#logout').onclick = () => fetch('/auth/logout', { method: 'POST' }).then(() => location.reload());
+      document.querySelector('#send').onclick = async () => { const command = document.querySelector('#command').value; const r = await fetch('/api/server/command', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({command}) }); document.querySelector('#result').textContent = (await r.json()).message || 'Errore'; };
+    } load();
+  </script>
+</body>
+</html>
