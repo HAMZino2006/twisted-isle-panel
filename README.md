@@ -1,4 +1,4 @@
-# THE Twisted Isle Panel
+# THE Twisted Isle Panel.
 
 Pannello web per **Twisted Isle**, server The Isle Evrima.
 
