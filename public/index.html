@@ -1,199 +1,38 @@
 <!doctype html>
-<html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Twisted Isle Panel</title>
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <aside class="sidebar">
-        <div class="logo">Twisted Isle</div>
-        <div class="logo-sub">The Isle Evrima Panel</div>
-
-        <div class="nav-section">
-          <div class="nav-label">Main</div>
-          <a class="nav-link active" href="#">Dashboard</a>
-          <a class="nav-link" href="#">Server</a>
-          <a class="nav-link" href="#">Players</a>
-          <a class="nav-link" href="#">Logs</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twisted Isle Panel</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="login" class="card login-card" hidden>
+    <h1>Twisted Isle</h1><p>Sign in with Discord to access the administration panel.</p>
+    <a class="btn primary" href="/auth/discord">Login with Discord</a>
+    <p id="login-error" class="text-warning"></p>
+  </div>
+  <div id="app" class="container" hidden>
+    <aside class="sidebar">
+      <div class="logo">Twisted Isle</div><div class="logo-sub">The Isle Evrima Panel</div>
+      <nav aria-label="Main navigation">
+        <div class="nav-section"><div class="nav-label">Main</div>
+          <a class="nav-link" data-route="/dashboard" href="/dashboard">Dashboard</a>
+          <a class="nav-link" data-route="/server" href="/server">Server</a>
+          <a class="nav-link" data-route="/players" href="/players">Players</a>
+          <a class="nav-link" data-route="/logs" href="/logs">Logs</a>
         </div>
-
-        <div class="nav-section">
-          <div class="nav-label">Admin</div>
-          <a class="nav-link" href="#">Commands</a>
-          <a class="nav-link" href="#">RCON</a>
-          <a class="nav-link" href="#">Config</a>
-          <a class="nav-link" href="#">Discord</a>
+        <div class="nav-section"><div class="nav-label">Admin</div>
+          <a class="nav-link" data-route="/commands" href="/commands">Commands</a>
+          <a class="nav-link" data-route="/rcon" href="/rcon">RCON</a>
+          <a class="nav-link" data-route="/config" href="/config">Config</a>
+          <a class="nav-link" data-route="/discord" href="/discord">Discord</a>
         </div>
-
-        <div class="user-section">
-          <div class="user-info">
-            <img class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" />
-            <div class="user-details">
-              <div class="user-name">HAMZino</div>
-              <div class="user-role">Owner</div>
-            </div>
-          </div>
-          <button class="logout-btn">Logout</button>
-        </div>
-      </aside>
-
-      <main class="main">
-        <header class="header">
-          <div>
-            <div class="page-title">Settings</div>
-            <div class="page-subtitle">Server configuration interface</div>
-          </div>
-          <div class="status online">
-            <span class="status-dot online"></span>
-            Server Online
-          </div>
-        </header>
-
-        <section class="grid">
-          <div class="stat-box">
-            <div class="stat-label">Players</div>
-            <div class="stat-value">18</div>
-            <div class="stat-unit">/ 40 online</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-label">Map</div>
-            <div class="stat-value">Twisted</div>
-            <div class="stat-unit">Island region</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-label">Ping</div>
-            <div class="stat-value">42ms</div>
-            <div class="stat-unit">Stable connection</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-label">Uptime</div>
-            <div class="stat-value">04:12</div>
-            <div class="stat-unit">Server online</div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-title">Graphics</div>
-          <div class="grid two">
-            <div class="setting-group">
-              <div class="setting-row">
-                <label>Resolution</label>
-                <select>
-                  <option>1024x768</option>
-                  <option>1280x720</option>
-                  <option selected>1920x1080</option>
-                  <option>2560x1440</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>Texture Quality</label>
-                <select>
-                  <option>Low</option>
-                  <option selected>Epic</option>
-                  <option>High</option>
-                  <option>Medium</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>VSync</label>
-                <select>
-                  <option>Off</option>
-                  <option selected>On</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>FPS Limit</label>
-                <input type="text" value="144" />
-              </div>
-            </div>
-
-            <div class="setting-group">
-              <div class="setting-row">
-                <label>Shadow Quality</label>
-                <select>
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option selected>Epic</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>Ambient Occlusion</label>
-                <select>
-                  <option>Off</option>
-                  <option selected>On</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>Bloom</label>
-                <select>
-                  <option>Off</option>
-                  <option selected>On</option>
-                </select>
-              </div>
-
-              <div class="setting-row">
-                <label>Clouds</label>
-                <select>
-                  <option>Low</option>
-                  <option selected>Volumetric</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-title">Administrative actions</div>
-          <div class="admin-section">
-            <div class="admin-label">Admin only</div>
-            <button class="btn primary">Restart server</button>
-            <button class="btn">Save config</button>
-            <button class="btn danger">Force reboot</button>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-title">Latest activity</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Action</th>
-                <th>Actor</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>12:42</td>
-                <td>Restart</td>
-                <td>Owner</td>
-                <td class="text-success">Success</td>
-              </tr>
-              <tr>
-                <td>12:18</td>
-                <td>Whitelist update</td>
-                <td>Admin</td>
-                <td class="text-success">Success</td>
-              </tr>
-              <tr>
-                <td>11:52</td>
-                <td>Player kick</td>
-                <td>Upper Staff</td>
-                <td class="text-warning">Executed</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-      </main>
-    </div>
-  </body>
+      </nav>
+      <div class="user-section"><div class="user-info"><img id="user-avatar" class="user-avatar" alt="Avatar" /><div class="user-details"><div id="user-name" class="user-name"></div><div id="user-role" class="user-role"></div></div></div><button id="logout" class="logout-btn">Logout</button></div>
+    </aside>
+    <main class="main"><header class="header"><div><div id="page-title" class="page-title"></div><div id="page-subtitle" class="page-subtitle"></div></div><div id="server-status" class="status"><span class="status-dot"></span><span>Checking server...</span></div></header><div id="view"></div></main>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
 </html>
